@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import {Button, Card, Col, Container, Row} from "react-bootstrap";
+import {Link} from "react-router-dom";
 
 const ProductList = () => {
 
@@ -29,6 +30,9 @@ const ProductList = () => {
     return (
 
         <Container className={"mt-5"}>
+            <Link to={'/create'}>
+                <Button variant="secondary">New Product</Button>{' '}
+            </Link>
             <Row>
                 {products?.map(product => (
                     // <div>
@@ -47,7 +51,9 @@ const ProductList = () => {
                                 <Card.Text>
                                     price: ${product.price}
                                 </Card.Text>
-                                <Button variant="primary">Detail Info</Button>
+                                <Link to={`/${product.id}`}>
+                                    <Button variant="primary">Detail Info</Button>
+                                </Link>
                             </Card.Body>
                         </Card>
                     </Col>
