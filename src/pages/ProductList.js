@@ -13,7 +13,8 @@ const ProductList = () => {
     const getProducts = async () => {
         try{
             const {data, status} = await axios.get('http://localhost:8000/api/product/all')
-            setProducts(data.data)
+            console.log('+++++++++++++++++++++++++++++++', data.data.data)
+            setProducts(data.data.data)
         } catch (err) {
             console.log(err)
         }
