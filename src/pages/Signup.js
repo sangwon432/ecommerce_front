@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Container, Form, Row} from "react-bootstrap";
 import axios from "axios";
 
@@ -9,13 +9,39 @@ const Signup = () => {
     const [password, setPassword] = useState("")
     const [confirmPW, setConfirmPW] = useState("")
 
-    // const [emailBtnActive, setEmailBtnActive] = useState(false)
+    const [isEmailValid, setIsEmailValid] = useState(false)
+    const [isCodeView, setIsCodeView] = useState(false)
 
     const [over14, setOver14] = useState(false)
     const [agreeOfTerms, setAgreeOfTerms] = useState(false)
     const [agreeOfPersonalInfo, setAgreeOfPersonalInfo] = useState(false)
     const [agreeOfMarketing, setAgreeOfMarketing] = useState(false)
     const [agreeOfEvent, setAgreeOfEvent] = useState(false)
+
+    console.log(isCodeView)
+
+    // useEffect(() => {
+    //     const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+    //     setIsEmailValid(emailRegex.test(email))
+    // }, [email]);
+    useEffect(() => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        setIsEmailValid(emailRegex.test(email))
+    }, [email]);
+
+    const sendEmailCode = async (e) => {
+        e.preventDefault()
+
+        try {
+            const {status} = await axios.post("http://localhost:8000/api/auth/email/send", {email})
+            if (status === 200) {
+                setIsCodeView(true)
+            }
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     const submitHandler = async (e) => {
         e.preventDefault()
@@ -32,6 +58,8 @@ const Signup = () => {
             alert("please check agree")
             return
         }
+
+
 
         try {
             const {data, status} = await axios.post("http://localhost:8000/api/auth/signup", userInput)
@@ -72,21 +100,34 @@ const Signup = () => {
                                       placeholder="Enter email"
                                       value={email}
                                       onChange={(e)=> setEmail(e.target.value)}
+                                      isValid={isEmailValid}
                         />
                         <Form.Text className="text-muted">
                             We'll never share your email with anyone else.
                         </Form.Text>
                     </Form.Group>
 
-                    {/*<div className="d-grid gap-2 mb-3">*/}
-                    {/*    <Button variant="primary" size="lg" disabled>*/}
-                    {/*        이메일 인증하기*/}
-                    {/*    </Button>*/}
-                    {/*</div>*/}
+                    <div className="d-grid gap-2 mb-3">
+                        <Button variant="primary" size="lg" disabled={!isEmailValid} onClick={sendEmailCode}>
+                            이메일 인증하기
+                        </Button>
+                    </div>
 
-                    {/*{emailBtnActive ? (*/}
+                    {isCodeView ? (
+                        <div className={"mb-5"}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>code</Form.Label>
+                                <Form.Control type="text"
+                                              placeholder="code"/>
+                            </Form.Group>
+                            <div className="d-grid gap-2 mb-3">
+                                <Button variant="primary" size="lg" disabled={!isEmailValid} onClick={sendEmailCode}>
+                                    코드 인증하기
+                                </Button>
+                            </div>
+                        </div>
 
-                    {/*) : null}*/}
+                    ) : null}
 
                     <Form.Group className="mb-3">
                         <Form.Label>Password</Form.Label>
