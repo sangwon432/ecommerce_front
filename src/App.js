@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/profile";
 import ForgotPW from "./pages/forgotPW";
+import ChangePW from "./pages/changePW";
 
 const App = () => {
     return (
@@ -19,6 +20,7 @@ const App = () => {
                     <Route path={"/signup"} element={<Signup/>}/>
                     <Route path={"/profile"} element={<Profile/>}/>
                     <Route path={"/forgot/password"} element={<ForgotPW/>}/>
+                    <Route path={"/change/password"} element={<ChangePW/>}/>
                 </Routes>
             </BrowserRouter>
         </div>
