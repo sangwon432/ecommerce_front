@@ -1,8 +1,11 @@
 import React, {useState} from 'react';
 import {Button, Container, Form, Row} from "react-bootstrap";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 const Login = () => {
+
+    const navigate = useNavigate()
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -17,8 +20,7 @@ const Login = () => {
             const {data, status} = await axios.post("http://localhost:8000/api/auth/login", userInput)
             console.log("++++++++", status)
             if (status === 200) {
-
-                alert("login success")
+                navigate("/profile")
             }
         } catch (err) {
             console.log(err.message)
@@ -55,9 +57,18 @@ const Login = () => {
                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
                         <Form.Check type="checkbox" label="Check me out" />
                     </Form.Group>
-                    <Button variant="primary" type="submit">
-                        Submit
-                    </Button>
+
+                    <>
+                        <Button variant="primary" size="lg" type="submit">
+                            Submit
+                        </Button>
+                        {" "}
+                        <Button variant="secondary" size="lg" active onClick={() => navigate("/forgot/password")}>
+                            패스워드 찾기
+                        </Button>
+
+                    </>
+
                 </Form>
 
 

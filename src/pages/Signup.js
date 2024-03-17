@@ -1,8 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Container, Form, Row} from "react-bootstrap";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 const Signup = () => {
+
+    const navigate = useNavigate()
 
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
@@ -11,12 +14,15 @@ const Signup = () => {
 
     const [isEmailValid, setIsEmailValid] = useState(false)
     const [isCodeView, setIsCodeView] = useState(false)
+    const [code, setCode] = useState("")
 
     const [over14, setOver14] = useState(false)
     const [agreeOfTerms, setAgreeOfTerms] = useState(false)
     const [agreeOfPersonalInfo, setAgreeOfPersonalInfo] = useState(false)
     const [agreeOfMarketing, setAgreeOfMarketing] = useState(false)
     const [agreeOfEvent, setAgreeOfEvent] = useState(false)
+
+    const [isVerified, setIsVerified] = useState(false)
 
     console.log(isCodeView)
 
@@ -43,11 +49,37 @@ const Signup = () => {
         }
     }
 
+    const verifyEmail = async (e) => {
+        e.preventDefault()
+        const userInput = {
+            email, code
+        }
+
+
+        try {
+            console.log(userInput)
+            const {status} = await axios.post("http://localhost:8000/api/auth/email/check", userInput)
+
+            if (status === 201) {
+
+                setIsCodeView(false)
+                setIsVerified(true)
+                alert("email verification success")
+
+            }
+
+        } catch (err) {
+            console.log(err.message)
+        }
+    }
+
     const submitHandler = async (e) => {
         e.preventDefault()
         const userInput = {
             username, email, password
         }
+
+        console.log(userInput)
 
         if (password !== confirmPW) {
             alert("password do not match")
@@ -66,6 +98,7 @@ const Signup = () => {
 
             if (status === 201) {
                 alert("signup success")
+                navigate("/login")
             }
         } catch (err) {
             console.log(err.message)
@@ -118,10 +151,12 @@ const Signup = () => {
                             <Form.Group className="mb-3">
                                 <Form.Label>code</Form.Label>
                                 <Form.Control type="text"
-                                              placeholder="code"/>
+                                              placeholder="code"
+                                              value={code}
+                                              onChange={(e)=> setCode(e.target.value)}/>
                             </Form.Group>
                             <div className="d-grid gap-2 mb-3">
-                                <Button variant="primary" size="lg" disabled={!isEmailValid} onClick={sendEmailCode}>
+                                <Button variant="primary" size="lg" disabled={!isEmailValid} onClick={verifyEmail}>
                                     코드 인증하기
                                 </Button>
                             </div>
@@ -185,7 +220,7 @@ const Signup = () => {
                             onChange={(e)=> setAgreeOfEvent(e.target.value)}
                         />
                     </Form.Group>
-                    <Button variant="primary" type="submit">
+                    <Button variant="primary" type="submit" disabled={!isVerified}>
                         Submit
                     </Button>
                 </Form>
