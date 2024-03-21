@@ -76,7 +76,14 @@ const Signup = () => {
     const submitHandler = async (e) => {
         e.preventDefault()
         const userInput = {
-            username, email, password
+            username, email, password,
+            terms: {
+                fourteenOver: over14,
+                agreeOfTerms,
+                personalInfo: agreeOfPersonalInfo,
+                marketingAgree: agreeOfMarketing,
+                etc: agreeOfEvent
+            }
         }
 
         console.log(userInput)
