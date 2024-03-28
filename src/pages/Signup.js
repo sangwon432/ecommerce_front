@@ -12,6 +12,8 @@ const Signup = () => {
     const [password, setPassword] = useState("")
     const [confirmPW, setConfirmPW] = useState("")
 
+    const [isVerificationEmailSent, setIsVerificationEmailSent] = useState(false)
+
     const [isEmailValid, setIsEmailValid] = useState(false)
     const [isCodeView, setIsCodeView] = useState(false)
     const [code, setCode] = useState("")
@@ -21,6 +23,8 @@ const Signup = () => {
     const [agreeOfPersonalInfo, setAgreeOfPersonalInfo] = useState(false)
     const [agreeOfMarketing, setAgreeOfMarketing] = useState(false)
     const [agreeOfEvent, setAgreeOfEvent] = useState(false)
+
+    console.log(over14)
 
     const [isVerified, setIsVerified] = useState(false)
 
@@ -42,6 +46,7 @@ const Signup = () => {
             const {status} = await axios.post("http://localhost:8000/api/auth/email/send", {email})
             if (status === 200) {
                 setIsCodeView(true)
+                setIsVerificationEmailSent(true)
             }
 
         } catch (err) {
@@ -72,6 +77,8 @@ const Signup = () => {
             console.log(err.message)
         }
     }
+
+
 
     const submitHandler = async (e) => {
         e.preventDefault()
@@ -122,16 +129,16 @@ const Signup = () => {
             <Row>
                 <Form onSubmit={submitHandler}>
                     <Form.Group className="mb-3">
-                        <Form.Label>username</Form.Label>
+                        <Form.Label>Username</Form.Label>
                         <Form.Control
                             type="text"
                             placeholder="Enter username"
                             value={username}
                             onChange={(e)=> setUsername(e.target.value)}
                         />
-                        <Form.Text className="text-muted">
-                            your username is already taken
-                        </Form.Text>
+                        {/*<Form.Text className="text-muted">*/}
+                        {/*    your username is already taken*/}
+                        {/*</Form.Text>*/}
                     </Form.Group>
 
                     <Form.Group className="mb-3">
@@ -148,8 +155,8 @@ const Signup = () => {
                     </Form.Group>
 
                     <div className="d-grid gap-2 mb-3">
-                        <Button variant="primary" size="lg" disabled={!isEmailValid} onClick={sendEmailCode}>
-                            이메일 인증하기
+                        <Button variant="primary" size="lg" disabled={!isEmailValid || isVerificationEmailSent} onClick={sendEmailCode}>
+                            Verify Email
                         </Button>
                     </div>
 
@@ -164,7 +171,7 @@ const Signup = () => {
                             </Form.Group>
                             <div className="d-grid gap-2 mb-3">
                                 <Button variant="primary" size="lg" disabled={!isEmailValid} onClick={verifyEmail}>
-                                    코드 인증하기
+                                    Verify
                                 </Button>
                             </div>
                         </div>
@@ -178,7 +185,7 @@ const Signup = () => {
                                       value={password}
                                       onChange={(e)=> setPassword(e.target.value)}/>
                         <Form.Text className={"text-muted"}>
-                            Your password must be comprised of at least 8 characters long and include a number...
+                            Your password must contain at least 8 characters with at least one special character.
                         </Form.Text>
                     </Form.Group>
 
@@ -186,51 +193,57 @@ const Signup = () => {
                         <Form.Label>Confirm Password</Form.Label>
                         <Form.Control
                             type="password"
-                            placeholder="Password"
+                            placeholder="Confirm Password"
                             value={confirmPW}
                             onChange={(e)=> setConfirmPW(e.target.value)}/>
                     </Form.Group>
 
                     <Form.Group className="mb-5">
                         <Form.Check type="checkbox"
-                                    label="만 14세 이상입니다(필수)"
+                                    label="I am over 14 years old. (Required)"
                                     className={"mb-3"}
                                     value={over14}
-                                    onChange={(e)=> setOver14(e.target.value)}
+                                    onChange={() => setOver14(!over14)}
                         />
                         <Form.Check
                             type="checkbox"
-                            label="이용약관(필수)"
+                            label="I agree to the Terms of Service. (Required)"
                             className={"mb-3"}
                             value={agreeOfTerms}
-                            onChange={(e)=> setAgreeOfTerms(e.target.value)}
+                            onChange={()=> setAgreeOfTerms(!agreeOfTerms)}
                         />
                         <Form.Check
                             type="checkbox"
-                            label="개인정보수집 및 이용동의(필수)"
+                            label="I consent to the collection and use of my personal information. (Required)"
                             className={"mb-3"}
                             value={agreeOfPersonalInfo}
-                            onChange={(e)=> setAgreeOfPersonalInfo(e.target.value)}
+                            onChange={()=> setAgreeOfPersonalInfo(!agreeOfPersonalInfo)}
                         />
                         <Form.Check
                             type="checkbox"
-                            label="개인정보 마케팅 활용 동의(선택)"
+                            label="I agree to the use of my personal information for marketing purposes. (Optional)"
                             className={"mb-3"}
                             value={agreeOfMarketing}
-                            onChange={(e)=> setAgreeOfMarketing(e.target.value)}
+                            onChange={()=> setAgreeOfMarketing(!agreeOfMarketing)}
                         />
                         <Form.Check
                             type="checkbox"
-                            label="이벤트, 쿠폰, 특가 알림 메일 및 SMS 등 수신(선택)"
+                            label="I would like to receive promotional emails and SMS messages regarding events, coupons, and special offers. (Optional)"
                             className={"mb-3"}
                             value={agreeOfEvent}
-                            onChange={(e)=> setAgreeOfEvent(e.target.value)}
+                            onChange={()=> setAgreeOfEvent(!agreeOfEvent)}
                         />
                     </Form.Group>
                     <Button variant="primary" type="submit" disabled={!isVerified}>
                         Submit
                     </Button>
+                    <>  </>
+                    <Button variant="secondary" onClick={() => navigate("/login")}>
+                        Log In
+                    </Button>
                 </Form>
+
+
 
             </Row>
         </Container>

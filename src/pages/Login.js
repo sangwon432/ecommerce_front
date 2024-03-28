@@ -18,10 +18,7 @@ const Login = () => {
 
         try {
             const {data, status} = await axios.post("http://localhost:8000/api/auth/login", userInput)
-            console.log("++++++++", status)
             if (status === 200) {
-
-                console.log("++++++++++++++++++++++", data.data.accessToken)
                 localStorage.setItem("accessToken", data.data.accessToken) // accessToken이라는 키값 생성후 value는 accessToken을 store
                 navigate("/profile")
             }
@@ -63,18 +60,14 @@ const Login = () => {
 
                     <>
                         <Button variant="primary" size="lg" type="submit">
-                            Submit
+                            Log In
                         </Button>
                         {" "}
                         <Button variant="secondary" size="lg" active onClick={() => navigate("/forgot/password")}>
-                            패스워드 찾기
+                            Forgot Password
                         </Button>
-
                     </>
-
                 </Form>
-
-
             </Row>
         </Container>
     );
