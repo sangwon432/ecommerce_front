@@ -8,6 +8,7 @@ import Profile from "./pages/profile";
 import ForgotPW from "./pages/forgotPW";
 import ChangePW from "./pages/changePW";
 import {CookiesProvider} from "react-cookie";
+import ProfileCreate from "./pages/ProfileCreate";
 
 const App = () => {
     return (
@@ -23,9 +24,10 @@ const App = () => {
                         <Route path={"/profile"} element={<Profile/>}/>
                         <Route path={"/forgot/password"} element={<ForgotPW/>}/>
                         <Route path={"/change/password"} element={<ChangePW/>}/>
+                        <Route path={"/profile/create"} element={<ProfileCreate/>}/>
                     </Routes>
                 </BrowserRouter>
-            
+
         </div>
     );
 };

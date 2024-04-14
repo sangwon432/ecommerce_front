@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import axios, {create} from "axios";
 import {Button, Modal, Card, CardBody, Col, Container, Form, Row} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
-import {CookiesProvider, useCookies} from "react-cookie";
+import {useCookies} from "react-cookie";
 
 const Profile = () => {
     const navigate = useNavigate()
@@ -34,7 +34,7 @@ const Profile = () => {
              // const token = await localStorage.getItem("accessToken")
             // 토큰 등 민감 정보는 쿠키, 장바구니와 같은 임시 데이터는 local storage
 
-            
+
 
 
             const config = {
