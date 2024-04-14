@@ -2,15 +2,20 @@ import React, {useEffect, useRef, useState} from 'react';
 import axios, {create} from "axios";
 import {Button, Modal, Card, CardBody, Col, Container, Form, Row} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
+import {CookiesProvider, useCookies} from "react-cookie";
 
 const Profile = () => {
     const navigate = useNavigate()
+
+    const [cookies, setCookies] = useCookies(["Authentication"])
+    console.log("Bearer " + cookies.Authentication);
 
     const [email, setEmail] = useState("")
     const [name, setName] = useState("")
     const [profileImg, setProfileImg] = useState("")
     const [createdAt, setCreatedAt] = useState("")
     const [show, setShow] = useState(false)
+
 
     // const queryParams = new URLSearchParams(location.search)
     // const token = queryParams.get("token")
@@ -25,11 +30,16 @@ const Profile = () => {
         try {
             console.log("get profile called")
 
-            const token = await localStorage.getItem("accessToken")
+
+             // const token = await localStorage.getItem("accessToken")
+            // 토큰 등 민감 정보는 쿠키, 장바구니와 같은 임시 데이터는 local storage
+
+            
+
 
             const config = {
                 headers: {
-                    Authorization: "Bearer " + token
+                    Authorization: "Bearer " + cookies.Authentication
                 }
             }
             const {data, status} = await axios.get("http://localhost:8000/api/auth", config)
