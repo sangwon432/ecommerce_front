@@ -3,9 +3,12 @@ import {Button, Col, Container, Form, InputGroup, Row} from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {useCookies} from "react-cookie";
+import {useNavigate} from "react-router-dom";
 import axios from "axios";
 
 const ProfileCreate = () => {
+
+    const navigate = useNavigate()
 
     const [cookies, setCookies] = useCookies(["Authentication"])
 
@@ -22,9 +25,11 @@ const ProfileCreate = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
 
+        const formattedBirth = birth.toISOString().split('T')[0];
+
         const userInput = {
             gender,
-            birth: "1111-01-01",
+            birth: formattedBirth,
             religion,
             homeAddress,
             bloodType,
@@ -43,6 +48,10 @@ const ProfileCreate = () => {
         try {
             const {data, status} = await axios.post("http://localhost:8000/api/profile", userInput, config)
             console.log(status)
+            if (status === 201) {
+                alert("profile create success")
+                navigate("/self-introduction/create")
+            }
 
         } catch (err) {
             console.log(err.message)
@@ -68,7 +77,10 @@ const ProfileCreate = () => {
                         </Form.Group>
                         <Form.Group as={Col} md="4" controlId="validationCustom02">
                             <Form.Label>Birth</Form.Label>
-                            <DatePicker selected={birth} onChange={e => setBirth(e.target.value)}/>
+                            <DatePicker
+                                selected={birth}
+                                onChange={(date) => setBirth(date)}
+                            />
                         </Form.Group>
                         <Form.Group as={Col} md="4" controlId="validationCustomUsername">
                             <Form.Label>Religion</Form.Label>

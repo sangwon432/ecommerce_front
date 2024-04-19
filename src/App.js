@@ -9,6 +9,8 @@ import ForgotPW from "./pages/forgotPW";
 import ChangePW from "./pages/changePW";
 import {CookiesProvider} from "react-cookie";
 import ProfileCreate from "./pages/ProfileCreate";
+import EducationCreate from "./pages/EducationCreate";
+import SelfIntroductionCreate from "./pages/SelfIntroductionCreate";
 
 const App = () => {
     return (
@@ -25,6 +27,8 @@ const App = () => {
                         <Route path={"/forgot/password"} element={<ForgotPW/>}/>
                         <Route path={"/change/password"} element={<ChangePW/>}/>
                         <Route path={"/profile/create"} element={<ProfileCreate/>}/>
+                        <Route path={"/education/create"} element={<EducationCreate/>}/>
+                        <Route path={"/self-introduction/create"} element={<SelfIntroductionCreate/>}/>
                     </Routes>
                 </BrowserRouter>
 

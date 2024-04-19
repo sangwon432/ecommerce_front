@@ -122,6 +122,28 @@ const Signup = () => {
     }
 
 
+    // const handleCheckAllTerms = () => {
+    //     const newValue = !agreeOfTerms;
+    //     setAgreeOfTerms(newValue);
+    //     setAgreeOfPersonalInfo(newValue);
+    //     setAgreeOfMarketing(newValue);
+    //     setAgreeOfEvent(newValue);
+    //
+    //     console.log("agree of terms" ,agreeOfTerms)
+    //     console.log("agree of personal info", agreeOfPersonalInfo)
+    //     console.log("agree of marketing", agreeOfMarketing)
+    //     console.log("agree of event", agreeOfEvent)
+    // };
+
+    const handleCheckAllTerms = () => {
+        const newValue = !agreeOfTerms;
+        setAgreeOfTerms(newValue);
+        setAgreeOfPersonalInfo(newValue);
+        setAgreeOfMarketing(newValue);
+        setAgreeOfEvent(newValue);
+        setOver14(newValue);
+    };
+
 
     return (
         <Container className={"mt-5"}>
@@ -198,41 +220,95 @@ const Signup = () => {
                             onChange={(e)=> setConfirmPW(e.target.value)}/>
                     </Form.Group>
 
-                    <Form.Group className="mb-5">
-                        <Form.Check type="checkbox"
-                                    label="I am over 14 years old. (Required)"
-                                    className={"mb-3"}
-                                    value={over14}
-                                    onChange={() => setOver14(!over14)}
+                    <Form.Group className="mb-3">
+                        <Form.Check
+                            type="checkbox"
+                            label="Agree to all terms"
+                            className={"mb-3"}
+                            onChange={handleCheckAllTerms}
+                            checked={agreeOfTerms && agreeOfPersonalInfo && agreeOfMarketing && agreeOfEvent && over14}
+                        />
+
+                        <Form.Check
+                            type="checkbox"
+                            label="I am over 14 years old. (Required)"
+                            className={"mb-3"}
+                            checked={over14}
+                            onChange={() => setOver14(!over14)}
                         />
                         <Form.Check
                             type="checkbox"
                             label="I agree to the Terms of Service. (Required)"
                             className={"mb-3"}
-                            value={agreeOfTerms}
-                            onChange={()=> setAgreeOfTerms(!agreeOfTerms)}
+                            checked={agreeOfTerms}
+                            onChange={() => setAgreeOfTerms(!agreeOfTerms)}
                         />
                         <Form.Check
                             type="checkbox"
                             label="I consent to the collection and use of my personal information. (Required)"
                             className={"mb-3"}
-                            value={agreeOfPersonalInfo}
-                            onChange={()=> setAgreeOfPersonalInfo(!agreeOfPersonalInfo)}
+                            checked={agreeOfPersonalInfo}
+                            onChange={() => setAgreeOfPersonalInfo(!agreeOfPersonalInfo)}
                         />
                         <Form.Check
                             type="checkbox"
                             label="I agree to the use of my personal information for marketing purposes. (Optional)"
                             className={"mb-3"}
-                            value={agreeOfMarketing}
-                            onChange={()=> setAgreeOfMarketing(!agreeOfMarketing)}
+                            checked={agreeOfMarketing}
+                            onChange={() => setAgreeOfMarketing(!agreeOfMarketing)}
                         />
                         <Form.Check
                             type="checkbox"
                             label="I would like to receive promotional emails and SMS messages regarding events, coupons, and special offers. (Optional)"
                             className={"mb-3"}
-                            value={agreeOfEvent}
-                            onChange={()=> setAgreeOfEvent(!agreeOfEvent)}
+                            checked={agreeOfEvent}
+                            onChange={() => setAgreeOfEvent(!agreeOfEvent)}
                         />
+
+                        {/*    <Form.Check*/}
+                    {/*        type="checkbox"*/}
+                    {/*        label="Agree to all terms"*/}
+                    {/*        className={"mb-3"}*/}
+                    {/*        onChange={handleCheckAllTerms}*/}
+                    {/*        checked={agreeOfTerms && agreeOfPersonalInfo && agreeOfMarketing && agreeOfEvent}*/}
+                    {/*    />*/}
+                    {/*</Form.Group>*/}
+
+                    {/*<Form.Group className="mb-5">*/}
+                    {/*    <Form.Check type="checkbox"*/}
+                    {/*                label="I am over 14 years old. (Required)"*/}
+                    {/*                className={"mb-3"}*/}
+                    {/*                value={over14}*/}
+                    {/*                onChange={() => setOver14(!over14)}*/}
+                    {/*    />*/}
+                    {/*    <Form.Check*/}
+                    {/*        type="checkbox"*/}
+                    {/*        label="I agree to the Terms of Service. (Required)"*/}
+                    {/*        className={"mb-3"}*/}
+                    {/*        value={agreeOfTerms}*/}
+                    {/*        onChange={()=> setAgreeOfTerms(!agreeOfTerms)}*/}
+                    {/*    />*/}
+                    {/*    <Form.Check*/}
+                    {/*        type="checkbox"*/}
+                    {/*        label="I consent to the collection and use of my personal information. (Required)"*/}
+                    {/*        className={"mb-3"}*/}
+                    {/*        value={agreeOfPersonalInfo}*/}
+                    {/*        onChange={()=> setAgreeOfPersonalInfo(!agreeOfPersonalInfo)}*/}
+                    {/*    />*/}
+                    {/*    <Form.Check*/}
+                    {/*        type="checkbox"*/}
+                    {/*        label="I agree to the use of my personal information for marketing purposes. (Optional)"*/}
+                    {/*        className={"mb-3"}*/}
+                    {/*        value={agreeOfMarketing}*/}
+                    {/*        onChange={()=> setAgreeOfMarketing(!agreeOfMarketing)}*/}
+                    {/*    />*/}
+                    {/*    <Form.Check*/}
+                    {/*        type="checkbox"*/}
+                    {/*        label="I would like to receive promotional emails and SMS messages regarding events, coupons, and special offers. (Optional)"*/}
+                    {/*        className={"mb-3"}*/}
+                    {/*        value={agreeOfEvent}*/}
+                    {/*        onChange={()=> setAgreeOfEvent(!agreeOfEvent)}*/}
+                    {/*    />*/}
                     </Form.Group>
                     <Button variant="primary" type="submit" disabled={!isVerified}>
                         Submit

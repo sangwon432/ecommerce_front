@@ -36,12 +36,16 @@ const Profile = () => {
 
 
 
-
             const config = {
                 headers: {
-                    Authorization: "Bearer " + cookies.Authentication
+                    Authorization: `Bearer ${cookies.Authentication}`
                 }
-            }
+            };
+            // const config = {
+            //     headers: {
+            //         Authorization: "Bearer " + cookies.Authentication
+            //     }
+            // }
             const {data, status} = await axios.get("http://localhost:8000/api/auth", config)
             console.log("status: ", status)
 
