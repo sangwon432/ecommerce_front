@@ -138,7 +138,7 @@ const ProfileCreate = () => {
                             value={haveChildren}
                             onChange={e => setHaveChildren(e.target.value)}
                             required
-                            label="Do yo have children?"
+                            label="Do you have children?"
                         />
                     </Form.Group>
 

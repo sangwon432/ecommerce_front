@@ -17,12 +17,11 @@ const Login = () => {
         }
 
         try {
-            const {data, status} = await axios.post("http://localhost:8000/api/auth/login", userInput, {baseURL: "http:localhost:8000/auth/login", withCredentials: true})
+            const {data, status} = await axios.post("https://localhost/api/auth/login", userInput, {baseURL: "https:localhost/auth/login", withCredentials: true})
             if (status === 200) {
 
 
                 // localStorage.setItem("accessToken", data.data.accessToken)
-                // accessToken이라는 키값 생성후 value는 accessToken을 store
                 navigate("/profile")
             }
         } catch (err) {

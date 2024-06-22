@@ -1,149 +1,109 @@
-import React, {useEffect, useState} from 'react';
-import {Button, Container, Form, Row} from "react-bootstrap";
+import React, { useEffect, useState } from 'react';
+import { Button, Container, Form, Row } from "react-bootstrap";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+    const navigate = useNavigate();
 
-    const navigate = useNavigate()
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
-    const [username, setUsername] = useState("")
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [confirmPW, setConfirmPW] = useState("")
+    const [isVerificationEmailSent, setIsVerificationEmailSent] = useState(false);
 
-    const [isVerificationEmailSent, setIsVerificationEmailSent] = useState(false)
+    const [isEmailValid, setIsEmailValid] = useState(false);
+    const [showCodeInput, setShowCodeInput] = useState(false);
+    const [verificationCode, setVerificationCode] = useState("");
 
-    const [isEmailValid, setIsEmailValid] = useState(false)
-    const [isCodeView, setIsCodeView] = useState(false)
-    const [code, setCode] = useState("")
+    const [isOver14, setIsOver14] = useState(false);
+    const [agreeToTerms, setAgreeToTerms] = useState(false);
+    const [agreeToPersonalInfo, setAgreeToPersonalInfo] = useState(false);
+    const [agreeToMarketing, setAgreeToMarketing] = useState(false);
+    const [agreeToEvents, setAgreeToEvents] = useState(false);
 
-    const [over14, setOver14] = useState(false)
-    const [agreeOfTerms, setAgreeOfTerms] = useState(false)
-    const [agreeOfPersonalInfo, setAgreeOfPersonalInfo] = useState(false)
-    const [agreeOfMarketing, setAgreeOfMarketing] = useState(false)
-    const [agreeOfEvent, setAgreeOfEvent] = useState(false)
+    const [isEmailVerified, setIsEmailVerified] = useState(false);
 
-    console.log(over14)
-
-    const [isVerified, setIsVerified] = useState(false)
-
-    console.log(isCodeView)
-
-    // useEffect(() => {
-    //     const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
-    //     setIsEmailValid(emailRegex.test(email))
-    // }, [email]);
     useEffect(() => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        setIsEmailValid(emailRegex.test(email))
+        setIsEmailValid(emailRegex.test(email));
     }, [email]);
 
-    const sendEmailCode = async (e) => {
-        e.preventDefault()
+    const sendVerificationEmail = async (e) => {
+        e.preventDefault();
 
         try {
-            const {status} = await axios.post("http://localhost:8000/api/auth/email/send", {email})
+            const { status } = await axios.post("http://localhost:8000/api/auth/email/send", { email });
             if (status === 200) {
-                setIsCodeView(true)
-                setIsVerificationEmailSent(true)
+                setShowCodeInput(true);
+                setIsVerificationEmailSent(true);
             }
-
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
-    }
+    };
 
     const verifyEmail = async (e) => {
-        e.preventDefault()
-        const userInput = {
-            email, code
-        }
-
+        e.preventDefault();
+        const userInput = { email, code: verificationCode };
 
         try {
-            console.log(userInput)
-            const {status} = await axios.post("http://localhost:8000/api/auth/email/check", userInput)
-
+            const { status } = await axios.post("http://localhost:8000/api/auth/email/check", userInput);
             if (status === 201) {
-
-                setIsCodeView(false)
-                setIsVerified(true)
-                alert("email verification success")
-
+                setShowCodeInput(false);
+                setIsEmailVerified(true);
+                alert("Email verification successful");
             }
-
         } catch (err) {
-            console.log(err.message)
+            console.log(err.message);
         }
-    }
-
-
+    };
 
     const submitHandler = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
         const userInput = {
-            username, email, password,
+            username,
+            email,
+            password,
             terms: {
-                fourteenOver: over14,
-                agreeOfTerms,
-                personalInfo: agreeOfPersonalInfo,
-                marketingAgree: agreeOfMarketing,
-                etc: agreeOfEvent
+                isOver14,
+                agreeToTerms,
+                agreeToPersonalInfo,
+                agreeToMarketing,
+                agreeToEvents
             }
-        }
+        };
 
-        console.log(userInput)
-
-        if (password !== confirmPW) {
-            alert("password do not match")
+        if (password !== confirmPassword) {
+            alert("Passwords do not match");
             return;
         }
 
-        if (over14 === false || agreeOfTerms === false || agreeOfPersonalInfo === false) {
-            alert("please check agree")
-            return
+        if (!isOver14 || !agreeToTerms || !agreeToPersonalInfo) {
+            alert("Please agree to the required terms");
+            return;
         }
-
-
 
         try {
-            const {data, status} = await axios.post("http://localhost:8000/api/auth/signup", userInput)
-
+            const { status } = await axios.post("http://localhost:8000/api/auth/signup", userInput);
             if (status === 201) {
-                alert("signup success")
-                navigate("/login")
+                alert("Signup successful");
+                navigate("/login");
             }
         } catch (err) {
-            console.log(err.message)
+            console.log(err.message);
         }
-
-
-    }
-
-
-    // const handleCheckAllTerms = () => {
-    //     const newValue = !agreeOfTerms;
-    //     setAgreeOfTerms(newValue);
-    //     setAgreeOfPersonalInfo(newValue);
-    //     setAgreeOfMarketing(newValue);
-    //     setAgreeOfEvent(newValue);
-    //
-    //     console.log("agree of terms" ,agreeOfTerms)
-    //     console.log("agree of personal info", agreeOfPersonalInfo)
-    //     console.log("agree of marketing", agreeOfMarketing)
-    //     console.log("agree of event", agreeOfEvent)
-    // };
-
-    const handleCheckAllTerms = () => {
-        const newValue = !agreeOfTerms;
-        setAgreeOfTerms(newValue);
-        setAgreeOfPersonalInfo(newValue);
-        setAgreeOfMarketing(newValue);
-        setAgreeOfEvent(newValue);
-        setOver14(newValue);
     };
 
+    const handleCheckAllTerms = () => {
+        const newValue = !agreeToTerms;
+        setAgreeToTerms(newValue);
+        setAgreeToPersonalInfo(newValue);
+        setAgreeToMarketing(newValue);
+        setAgreeToEvents(newValue);
+        setIsOver14(newValue);
+    };
 
     return (
         <Container className={"mt-5"}>
@@ -156,20 +116,18 @@ const Signup = () => {
                             type="text"
                             placeholder="Enter username"
                             value={username}
-                            onChange={(e)=> setUsername(e.target.value)}
+                            onChange={(e) => setUsername(e.target.value)}
                         />
-                        {/*<Form.Text className="text-muted">*/}
-                        {/*    your username is already taken*/}
-                        {/*</Form.Text>*/}
                     </Form.Group>
 
                     <Form.Group className="mb-3">
-                        <Form.Label>Email address</Form.Label>
-                        <Form.Control type="email"
-                                      placeholder="Enter email"
-                                      value={email}
-                                      onChange={(e)=> setEmail(e.target.value)}
-                                      isValid={isEmailValid}
+                        <Form.Label>Email Address</Form.Label>
+                        <Form.Control
+                            type="email"
+                            placeholder="Enter email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            isValid={isEmailValid}
                         />
                         <Form.Text className="text-muted">
                             We'll never share your email with anyone else.
@@ -177,37 +135,40 @@ const Signup = () => {
                     </Form.Group>
 
                     <div className="d-grid gap-2 mb-3">
-                        <Button variant="primary" size="lg" disabled={!isEmailValid || isVerificationEmailSent} onClick={sendEmailCode}>
-                            Verify Email
+                        <Button variant="primary" size="lg" disabled={!isEmailValid || isVerificationEmailSent} onClick={sendVerificationEmail}>
+                            Send Verification Code
                         </Button>
                     </div>
 
-                    {isCodeView ? (
-                        <div className={"mb-5"}>
+                    {showCodeInput && (
+                        <div className="mb-5">
                             <Form.Group className="mb-3">
-                                <Form.Label>code</Form.Label>
-                                <Form.Control type="text"
-                                              placeholder="code"
-                                              value={code}
-                                              onChange={(e)=> setCode(e.target.value)}/>
+                                <Form.Label>Verification Code</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Enter verification code"
+                                    value={verificationCode}
+                                    onChange={(e) => setVerificationCode(e.target.value)}
+                                />
                             </Form.Group>
                             <div className="d-grid gap-2 mb-3">
                                 <Button variant="primary" size="lg" disabled={!isEmailValid} onClick={verifyEmail}>
-                                    Verify
+                                    Verify Code
                                 </Button>
                             </div>
                         </div>
-
-                    ) : null}
+                    )}
 
                     <Form.Group className="mb-3">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control type="password"
-                                      placeholder="Password"
-                                      value={password}
-                                      onChange={(e)=> setPassword(e.target.value)}/>
-                        <Form.Text className={"text-muted"}>
-                            Your password must contain at least 8 characters with at least one special character.
+                        <Form.Control
+                            type="password"
+                            placeholder="Enter password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <Form.Text className="text-muted">
+                            Your password must be at least 8 characters long and contain at least one special character.
                         </Form.Text>
                     </Form.Group>
 
@@ -215,112 +176,66 @@ const Signup = () => {
                         <Form.Label>Confirm Password</Form.Label>
                         <Form.Control
                             type="password"
-                            placeholder="Confirm Password"
-                            value={confirmPW}
-                            onChange={(e)=> setConfirmPW(e.target.value)}/>
+                            placeholder="Confirm password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
                     </Form.Group>
 
                     <Form.Group className="mb-3">
                         <Form.Check
                             type="checkbox"
                             label="Agree to all terms"
-                            className={"mb-3"}
+                            className="mb-3"
                             onChange={handleCheckAllTerms}
-                            checked={agreeOfTerms && agreeOfPersonalInfo && agreeOfMarketing && agreeOfEvent && over14}
+                            checked={agreeToTerms && agreeToPersonalInfo && agreeToMarketing && agreeToEvents && isOver14}
                         />
 
                         <Form.Check
                             type="checkbox"
                             label="I am over 14 years old. (Required)"
-                            className={"mb-3"}
-                            checked={over14}
-                            onChange={() => setOver14(!over14)}
+                            className="mb-3"
+                            checked={isOver14}
+                            onChange={() => setIsOver14(!isOver14)}
                         />
                         <Form.Check
                             type="checkbox"
                             label="I agree to the Terms of Service. (Required)"
-                            className={"mb-3"}
-                            checked={agreeOfTerms}
-                            onChange={() => setAgreeOfTerms(!agreeOfTerms)}
+                            className="mb-3"
+                            checked={agreeToTerms}
+                            onChange={() => setAgreeToTerms(!agreeToTerms)}
                         />
                         <Form.Check
                             type="checkbox"
                             label="I consent to the collection and use of my personal information. (Required)"
-                            className={"mb-3"}
-                            checked={agreeOfPersonalInfo}
-                            onChange={() => setAgreeOfPersonalInfo(!agreeOfPersonalInfo)}
+                            className="mb-3"
+                            checked={agreeToPersonalInfo}
+                            onChange={() => setAgreeToPersonalInfo(!agreeToPersonalInfo)}
                         />
                         <Form.Check
                             type="checkbox"
-                            label="I agree to the use of my personal information for marketing purposes. (Optional)"
-                            className={"mb-3"}
-                            checked={agreeOfMarketing}
-                            onChange={() => setAgreeOfMarketing(!agreeOfMarketing)}
+                            label="I agree to receive marketing communications. (Optional)"
+                            className="mb-3"
+                            checked={agreeToMarketing}
+                            onChange={() => setAgreeToMarketing(!agreeToMarketing)}
                         />
                         <Form.Check
                             type="checkbox"
-                            label="I would like to receive promotional emails and SMS messages regarding events, coupons, and special offers. (Optional)"
-                            className={"mb-3"}
-                            checked={agreeOfEvent}
-                            onChange={() => setAgreeOfEvent(!agreeOfEvent)}
+                            label="I agree to receive promotional emails and social media messages. (Optional)"
+                            className="mb-3"
+                            checked={agreeToEvents}
+                            onChange={() => setAgreeToEvents(!agreeToEvents)}
                         />
-
-                        {/*    <Form.Check*/}
-                    {/*        type="checkbox"*/}
-                    {/*        label="Agree to all terms"*/}
-                    {/*        className={"mb-3"}*/}
-                    {/*        onChange={handleCheckAllTerms}*/}
-                    {/*        checked={agreeOfTerms && agreeOfPersonalInfo && agreeOfMarketing && agreeOfEvent}*/}
-                    {/*    />*/}
-                    {/*</Form.Group>*/}
-
-                    {/*<Form.Group className="mb-5">*/}
-                    {/*    <Form.Check type="checkbox"*/}
-                    {/*                label="I am over 14 years old. (Required)"*/}
-                    {/*                className={"mb-3"}*/}
-                    {/*                value={over14}*/}
-                    {/*                onChange={() => setOver14(!over14)}*/}
-                    {/*    />*/}
-                    {/*    <Form.Check*/}
-                    {/*        type="checkbox"*/}
-                    {/*        label="I agree to the Terms of Service. (Required)"*/}
-                    {/*        className={"mb-3"}*/}
-                    {/*        value={agreeOfTerms}*/}
-                    {/*        onChange={()=> setAgreeOfTerms(!agreeOfTerms)}*/}
-                    {/*    />*/}
-                    {/*    <Form.Check*/}
-                    {/*        type="checkbox"*/}
-                    {/*        label="I consent to the collection and use of my personal information. (Required)"*/}
-                    {/*        className={"mb-3"}*/}
-                    {/*        value={agreeOfPersonalInfo}*/}
-                    {/*        onChange={()=> setAgreeOfPersonalInfo(!agreeOfPersonalInfo)}*/}
-                    {/*    />*/}
-                    {/*    <Form.Check*/}
-                    {/*        type="checkbox"*/}
-                    {/*        label="I agree to the use of my personal information for marketing purposes. (Optional)"*/}
-                    {/*        className={"mb-3"}*/}
-                    {/*        value={agreeOfMarketing}*/}
-                    {/*        onChange={()=> setAgreeOfMarketing(!agreeOfMarketing)}*/}
-                    {/*    />*/}
-                    {/*    <Form.Check*/}
-                    {/*        type="checkbox"*/}
-                    {/*        label="I would like to receive promotional emails and SMS messages regarding events, coupons, and special offers. (Optional)"*/}
-                    {/*        className={"mb-3"}*/}
-                    {/*        value={agreeOfEvent}*/}
-                    {/*        onChange={()=> setAgreeOfEvent(!agreeOfEvent)}*/}
-                    {/*    />*/}
                     </Form.Group>
-                    <Button variant="primary" type="submit" disabled={!isVerified}>
-                        Submit
+
+                    <Button variant="primary" type="submit" disabled={!isEmailVerified}>
+                        Sign Up
                     </Button>
-                    <>  </>
+                    {' '}
                     <Button variant="secondary" onClick={() => navigate("/login")}>
                         Log In
                     </Button>
                 </Form>
-
-
-
             </Row>
         </Container>
     );

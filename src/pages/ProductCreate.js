@@ -1,105 +1,93 @@
-import React, {useEffect, useState} from 'react';
-import {Button, Container, Form, Row} from "react-bootstrap";
+import React, { useEffect, useState } from 'react';
+import { Button, Container, Form, Row } from "react-bootstrap";
 import axios from "axios";
-import {useNavigate, useParams} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const ProductCreate = () => {
 
     const params = useParams();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     // name, desc, price, category, img, company
 
-    const [name, setName] = useState("")
-    const [price, setPrice] = useState(0)
-    const [category, setCategory] = useState("")
-    const [img, setImg] = useState("")
-    const [company, setCompany] = useState("")
-    const [desc, setDesc] = useState("")
-    const [isSales, setIsSales] = useState()
+    const [name, setName] = useState("");
+    const [price, setPrice] = useState(0);
+    const [category, setCategory] = useState("");
+    const [img, setImg] = useState("");
+    const [company, setCompany] = useState("");
+    const [desc, setDesc] = useState("");
+    const [onSale, setOnSale] = useState(false);
 
     const getProductInfo = async () => {
         try {
-
-            const {data, status} = await axios.get(`http://localhost:8000/api/product/${params.id}`)
-            console.log("#############", data.data.isSales)
+            const { data, status } = await axios.get(`http://localhost:8000/api/product/${params.id}`);
+            console.log("#############", data.data.onSale);
 
             if (status === 200) {
-                setName(data.data.name)
-                setDesc(data.data.desc)
-                setPrice(data.data.price)
-                setCompany(data.data.company)
-                setCategory(data.data.category)
-                setImg(data.data.img)
-                setIsSales(data.data.isSales)
+                setName(data.data.name);
+                setDesc(data.data.desc);
+                setPrice(data.data.price);
+                setCompany(data.data.company);
+                setCategory(data.data.category);
+                setImg(data.data.img);
+                setOnSale(data.data.onSale);
             }
 
         } catch (err) {
-            console.log(err.message)
+            console.log(err.message);
         }
-
     }
 
     const submitHandler = async (e) => {
-        e.preventDefault()
-        console.log("create")
+        e.preventDefault();
+        console.log("create");
 
-        // 유저가 서버에 전달해 줄 데이터 (body)
         const userInput = {
             name, price, category, img, company, desc
-        }
-        // console.log(typeof Number(price))
+        };
 
         try {
-            const {data, status} = await axios.post("http://localhost:8000/api/product/create", userInput)
-            console.log("++++++++++++++++++++", data)
+            const { data, status } = await axios.post("http://localhost:8000/api/product/create", userInput);
+            console.log("++++++++++++++++++++", data);
 
-            if (status === 201){
-                navigate(-1)
-
+            if (status === 201) {
+                navigate(-1);
             }
 
-
         } catch (err) {
-            console.log(err.message)
+            console.log(err.message);
         }
-
     }
-
 
     const updateProduct = async (e) => {
-        e.preventDefault()
-        console.log("update")
+        e.preventDefault();
+        console.log("update");
         const userInput = {
             name, price, category, img, company, desc
-        }
-        //console.log(isSales)
-        try {
-            const {data, status} = await axios.patch(`http://localhost:8000/api/product/${params.id}`, userInput)
-            console.log("++++++++++++++++++++", data)
+        };
 
-            if (status === 200){
-                navigate(-1)
+        try {
+            const { data, status } = await axios.patch(`http://localhost:8000/api/product/${params.id}`, userInput);
+            console.log("++++++++++++++++++++", data);
+
+            if (status === 200) {
+                navigate(-1);
             }
         } catch (err) {
-            console.log(err.message)
+            console.log(err.message);
         }
-
-
     }
 
-
     const deleteProduct = async (e) => {
-        e.preventDefault()
-        const {data, status} = await axios.delete(`http://localhost:8000/api/product/${params.id}`)
+        e.preventDefault();
+        const { data, status } = await axios.delete(`http://localhost:8000/api/product/${params.id}`);
 
-        if (status === 200){
-            navigate(-1)
+        if (status === 200) {
+            navigate(-1);
         }
-
     }
 
     useEffect(() => {
-        getProductInfo()
+        getProductInfo();
     }, []);
 
     return (
@@ -110,8 +98,8 @@ const ProductCreate = () => {
             </Button>
 
             <Row className={"mt-4"}>
-                {/*id가 있으면 updateproduct, 없으면 섭밋*/}
-                <Form className={"mt-4"}>
+                {/* if there is id, updateProduct, submit otherwise */}
+                <Form className={"mt-4"} onSubmit={params.id ? updateProduct : submitHandler}>
 
                     <Form.Group className="mb-3">
                         <Form.Label>Product Name</Form.Label>
@@ -135,10 +123,6 @@ const ProductCreate = () => {
                         />
                     </Form.Group>
 
-                    {/*<Form.Group className="mb-3">*/}
-                    {/*    <Form.Label>Category</Form.Label>*/}
-                    {/*    <Form.Control size="lg" type="text" placeholder="Category" />*/}
-                    {/*</Form.Group>*/}
                     <Form.Group className="mb-3">
                         <Form.Label>Category</Form.Label>
                         <Form.Select
@@ -191,30 +175,17 @@ const ProductCreate = () => {
                     {params.id ? (
                         <Form.Group className={"mb-3"}>
                             <Form.Check
-                                label={`isSales`}
+                                label={`On Sale`}
                                 type={"checkbox"}
-                                value={isSales}
-                                onChange={e => setIsSales(!isSales)}
+                                checked={onSale}
+                                onChange={e => setOnSale(!onSale)}
                             />
                         </Form.Group>
-
                     ) : null}
-
-
-
-
-                    {/*<Button variant="primary" size="lg" type={"submit"}>*/}
-                    {/*    {params.id ? "Delete Product" : null}*/}
-                    {/*</Button>*/}
-
-                    {/*{params.id ? <Button onClick={deleteProduct} variant="secondary" size="md" type={"submit"}>*/}
-                    {/*        Delete Product*/}
-                    {/*    </Button>*/}
-                    {/*    : null}*/}
 
                     {params.id ? (
                         <>
-                            <Button variant="primary" size="lg" onClick={updateProduct}>
+                            <Button variant="primary" size="lg" type="submit">
                                 Update
                             </Button>{' '}
                             <Button variant="secondary" size="lg" onClick={deleteProduct}>
@@ -222,13 +193,11 @@ const ProductCreate = () => {
                             </Button>
                         </>
                     ) : (
-                        <Button variant="primary" size="lg" type={"submit"}>
+                        <Button variant="primary" size="lg" type="submit">
                             Create
                         </Button>
                     )}
                 </Form>
-
-
             </Row>
         </Container>
     );

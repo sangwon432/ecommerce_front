@@ -105,44 +105,5 @@ const EducationCreate = () => {
         </Container>
     );
 };
-//
-// export default EducationCreate;
-//
-//
-// import React from 'react';
-// import {Col, Container, Form, Row} from "react-bootstrap";
-//
-// const EducationCreate = () => {
-//     return (
-//         <Container className={"mt-5"}>
-//             <Row className="mb-3">
-//                 <Col>
-//                     <Form>
-//
-//                         <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-//                             <Form.Label>Example textarea</Form.Label>
-//                             <Form.Control as="textarea" rows={3} />
-//                         </Form.Group>
-//                         <Form.Group as={Col} md="4" controlId="validationCustomUsername">
-//                             <Form.Label>Education Level</Form.Label>
-//                             <Form.Select aria-label="Default select example">
-//                                 <option>Education Level</option>
-//                                 <option value="1">High School</option>
-//                                 <option value="2">College Drop Out</option>
-//                                 <option value="3">Associate's Degree</option>
-//                                 <option value="4">University Drop Out</option>
-//                                 <option value="5">Bachelor's Degree</option>
-//                                 <option value="6">Course Completion of Master's Program</option>
-//                                 <option value="7">Master's Degree</option>
-//                                 <option value="8">PhD</option>
-//                                 <option value="9">PhD ABD</option>
-//                             </Form.Select>
-//                         </Form.Group>
-//                     </Form>
-//                 </Col>
-//             </Row>
-//         </Container>
-//     );
-// };
-//
+
 export default EducationCreate;

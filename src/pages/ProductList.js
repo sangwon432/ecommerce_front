@@ -5,11 +5,8 @@ import {Link} from "react-router-dom";
 
 const ProductList = () => {
 
-    // 데이터를 담을 그릇을 만든다.
     const [products, setProducts] = useState([])
 
-    // 2. axios를 설치한 후에 실행할 함수를 만든다
-    // 외부 api 사용시 async
     const getProducts = async () => {
         try{
             const {data, status} = await axios.get('http://localhost:8000/api/product/all')
@@ -23,7 +20,7 @@ const ProductList = () => {
     // function getProductList() {}
 
 
-    // 무조건 실행이 되는 훅(hook)
+    // hook
     useEffect(() => {
         getProducts()
     }, []);

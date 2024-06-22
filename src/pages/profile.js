@@ -32,7 +32,7 @@ const Profile = () => {
 
 
              // const token = await localStorage.getItem("accessToken")
-            // 토큰 등 민감 정보는 쿠키, 장바구니와 같은 임시 데이터는 local storage
+            // store tokens in cookies, temporary data in local storage
 
 
 
@@ -41,11 +41,7 @@ const Profile = () => {
                     Authorization: `Bearer ${cookies.Authentication}`
                 }
             };
-            // const config = {
-            //     headers: {
-            //         Authorization: "Bearer " + cookies.Authentication
-            //     }
-            // }
+
             const {data, status} = await axios.get("http://localhost:8000/api/auth", config)
             console.log("status: ", status)
 
@@ -121,14 +117,12 @@ const Profile = () => {
                         />
                     </Form.Group>
                     <Button>
-                        프로필 정보 수정
+                        Edit Profile
                     </Button>
                     <>  </>
-                    <Button variant="secondary" onClick={handleShow}> 회원 탈퇴</Button>
+                    <Button variant="secondary" onClick={handleShow}> Delete Account</Button>
                 </Form>
 
-                {//회원 탈퇴 버튼 만들고 버튼을 눌렀을 때 안내표시가 나와야함. 정말로 삭제를 원하는지를 물어봄.
-                    // Ok를 눌렀을 때 회원 탈퇴가 되었다는 표시가 나오고 30일의 유예 기간을 둔다. 중간에라도 재접속 시 회원 탈퇴 취소 가능}
                 }
             </Row>
 
@@ -137,13 +131,13 @@ const Profile = () => {
                     <Modal.Header closeButton>
                         <Modal.Title>Modal heading</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>정말로 탈퇴하시겠습니까? 30일간 접속이 없을 시 삭제됩니다. </Modal.Body>
+                    <Modal.Body>Are you sure you want to delete your account? If you do not access it for 30 days, it will be permanently deleted. </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={handleClose}>
-                            Close
+                            Cancel
                         </Button>
                         <Button variant="primary" onClick={confirmDeletion}>
-                            회원 탈퇴
+                            Delete Account
                         </Button>
                     </Modal.Footer>
                 </Modal>
